@@ -41,37 +41,36 @@ class FootballApi {
     }
   }
 
+  // ホーム、アウェイクラブの試合詳細データを取得
   Future<MatchDetailData> getMatchDetail(int fixtureId, int homeTeamId, int awayTeamId) async {
 
     List<Future<MatchStatics>> futureList = [];
-    futureList = [getMatchStatics(fixtureId, homeTeamId), getMatchStatics(fixtureId, awayTeamId)];
+    futureList = [];
 
-    /*
     var homeStatics = await getMatchStatics(fixtureId, homeTeamId);
     var awayStatics = await getMatchStatics(fixtureId, awayTeamId);
 
-     */
-    
-    var futureWait = Future.wait(futureList);
-    var result = await futureWait;
-
-    MatchDetailData matchData = MatchDetailData(result[0], result[1]);
+    MatchDetailData matchData = MatchDetailData(homeStatics, awayStatics);
     return matchData;
   }
 
+  // 1チームの特定の試合のスタッツを取得
   Future<MatchStatics> getMatchStatics(int fixtureId, int teamId) async {
     final String  newUrl = statisticsUrl + "?fixture=" + "${fixtureId}" + "&team=" + "${teamId}";
-    print("NewURL: ${newUrl}");
 
     Response res = await get(newUrl, headers: headers);
     var body;
 
     if(res.statusCode == 200) {
-      body = jsonDecode(res.body);
-      dynamic matchData = body['response'];
 
-      print("API Response: ${body}");
+      body = jsonDecode(res.body);
+
+      dynamic matchData = body['response'][0];
+
+      print("API Response: ${matchData}");
+
       MatchStatics matchStaticsData = MatchStatics.fromJson(matchData);
+
       return matchStaticsData;
     }
   }

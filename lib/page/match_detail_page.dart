@@ -30,7 +30,10 @@ class MatchDetailPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // return ScorePage(snapshot.data);
-            return Text("Success");
+            return Center(
+              child: Text("試合詳細情報取得：Success"),
+            );
+            return Text("試合詳細情報取得：Success");
           } else {
             return Center(
               child: CircularProgressIndicator(),
