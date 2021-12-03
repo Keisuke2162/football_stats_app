@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:football_stats_app/manager/api_manager.dart';
 import 'package:football_stats_app/match_tile.dart';
 import 'package:football_stats_app/model/fixture_model.dart';
+import 'package:football_stats_app/model/match_event_model.dart';
 import 'package:football_stats_app/model/match_statistics_model.dart';
 
 class MatchDetailBuilderWidget extends StatelessWidget {
@@ -32,8 +33,8 @@ class MatchDetailBuilderWidget extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // return MatchDetailPage(snapshot.data, match);
-
-            return Text("Success GET Fixture Event");
+            return MatchEventPage(snapshot.data, match, homeTeamId, awayTeamId);
+            // return Text("Success GET Fixture Event");
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -43,6 +44,42 @@ class MatchDetailBuilderWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget MatchEventPage(List<MatchEvent> matchEvents, FootballMatch matchData, int homeId, int awayId) {
+  return Column(
+    children: [
+      SizedBox(height: 16.0),
+      MatchTile(matchData),
+      Expanded(
+        child: ListView.builder(
+          itemCount: matchEvents.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    matchEvents[index].team.id == homeId
+                      ? Expanded(child: Text(matchEvents[index].type, textAlign: TextAlign.end,))
+                      : Expanded(child: Text("", textAlign: TextAlign.end,)),
+
+                    Expanded(child: Text(matchEvents[index].time.elapsed.toString(), textAlign: TextAlign.center,)),
+
+                    matchEvents[index].team.id == awayId
+                      ? Expanded(child: Text(matchEvents[index].type, textAlign: TextAlign.start,))
+                      : Expanded(child: Text("", textAlign: TextAlign.start,)),
+
+                  ],
+                ),
+              ],
+            );
+          }
+        ),
+      )
+    ],
+  );
 }
 
 Widget MatchDetailPage(MatchDetailData matchDetailData, FootballMatch matchData) {
@@ -73,29 +110,3 @@ Widget MatchDetailPage(MatchDetailData matchDetailData, FootballMatch matchData)
     ],
   );
 }
-
-/*
-child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: allmatches.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        child: matchTile(allmatches[index]),
-                        onTap: () {
-                          print("試合カードタップ：id ${allmatches[index].fixture.id}, hometeam ${allmatches[index].homeTeam.name}");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MatchDetailBuilderWidget(allmatches[index])),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
- */
