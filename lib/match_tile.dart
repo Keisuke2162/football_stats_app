@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:football_stats_app/manager/date_manager.dart';
 import 'package:football_stats_app/model/fixture_model.dart';
 
-Widget matchTile(FootballMatch match) {
+Widget MatchTile(FootballMatch match) {
   var homeGoal = match.goal.home ?? 0;
   var awayGoal = match.goal.away ?? 0;
   final dateManager = DateManager();

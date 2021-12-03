@@ -25,12 +25,12 @@ Widget ScorePage(List<FootballMatch> allmatches) {
                     itemCount: allmatches.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        child: matchTile(allmatches[index]),
+                        child: MatchTile(allmatches[index]),
                         onTap: () {
                           print("試合カードタップ：id ${allmatches[index].fixture.id}, hometeam ${allmatches[index].homeTeam.name}");
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MatchDetailPage(allmatches[index])),
+                              MaterialPageRoute(builder: (context) => MatchDetailBuilderWidget(allmatches[index])),
                           );
                         },
                       );

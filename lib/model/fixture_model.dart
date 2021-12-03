@@ -1,3 +1,4 @@
+// 試合のスコア情報モデル
 class FootballMatch {
   Fixture fixture;
   Team homeTeam;
@@ -13,7 +14,6 @@ class FootballMatch {
       Goal.fromJson(json['goals'])
     );
   }
-
 }
 
 class Fixture {

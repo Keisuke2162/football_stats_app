@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+// 試合のスタッツモデル
 class MatchDetailData {
   MatchStatics homeTeamData;
   MatchStatics awayTeamData;
@@ -14,7 +13,6 @@ class MatchStatics {
 
   factory MatchStatics.fromJson(Map<String, dynamic> json) {
 
-    print("テスト1");
     List<dynamic> statisticsData = json['statistics'];
 
     List<Statistic> statisticList = statisticsData.map((i) => new Statistic.fromJson(i)).toList();
