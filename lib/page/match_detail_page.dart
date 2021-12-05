@@ -26,21 +26,112 @@ class MatchDetailBuilderWidget extends StatelessWidget {
         centerTitle: true,
       ),
 
-      body: FutureBuilder(
-        // future: FootballApi().getMatchDetail(fixtureId, homeTeamId, awayTeamId),
-        future: FootballApi().getMatchEvent(fixtureId),
+      body: Column(
+        children: [
+          SizedBox(height: 16.0),
+          MatchTile(match),
+          MatchInformationView(match: match,),
+          /*
+          Expanded(
+            child:
+            FutureBuilder(
+              // future: FootballApi().getMatchDetail(fixtureId, homeTeamId, awayTeamId),
+                future: FootballApi().getMatchEvent(fixtureId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    // return MatchDetailPage(snapshot.data, match);
+                    return MatchEventPage(
+                        snapshot.data, match, homeTeamId, awayTeamId);
+                    // return Text("Success GET Fixture Event");
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }
+            ),
+          ),
+          */
+        ],
+      )
+      );
+  }
+}
 
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // return MatchDetailPage(snapshot.data, match);
-            return MatchEventPage(snapshot.data, match, homeTeamId, awayTeamId);
-            // return Text("Success GET Fixture Event");
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+class MatchInformationView extends StatefulWidget {
+
+  FootballMatch match;
+  MatchInformationView({this.match});
+
+  @override
+  _MatchInformationView createState() => _MatchInformationView();
+}
+
+class _MatchInformationView extends State<MatchInformationView> {
+
+  // 選択中の試合情報番号
+  int selectedInfoType = 0;
+
+  @override
+  Widget build(BuildContext context) {
+
+    FootballMatch match = widget.match;
+    int fixtureId = widget.match.fixture.id;
+    int homeTeamId = widget.match.homeTeam.id;
+    int awayTeamId = widget.match.awayTeam.id;
+
+    return Expanded(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedInfoType = 0;
+                        });
+                   }, child: Text("試合経過")),
+              ),
+              Expanded(
+                  child: TextButton(onPressed: () {
+                    setState(() {
+                      selectedInfoType = 1;
+                    });
+                  }, child:Text("スタッツ"))
+              ),
+            ],
+          ),
+
+          selectedInfoType == 0
+            ? Expanded(
+              child: FutureBuilder(
+                  future: FootballApi().getMatchEvent(fixtureId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return MatchEventPage(snapshot.data, match, homeTeamId, awayTeamId);
+                    } else {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+                  }
+                  ),
+            )
+          
+          : selectedInfoType == 1
+              ? Expanded(
+                  child: FutureBuilder(
+                      future: FootballApi().getMatchDetail(fixtureId, homeTeamId, awayTeamId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return MatchDetailPage(snapshot.data, match);
+                    } else {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+                  }
+              ),
+          )
+              : Text("エラー")
+        ],
       ),
     );
   }
@@ -49,8 +140,8 @@ class MatchDetailBuilderWidget extends StatelessWidget {
 Widget MatchEventPage(List<MatchEvent> matchEvents, FootballMatch matchData, int homeId, int awayId) {
   return Column(
     children: [
-      SizedBox(height: 16.0),
-      MatchTile(matchData),
+      // SizedBox(height: 16.0),
+      // MatchTile(matchData),
       Expanded(
         child: ListView.builder(
           itemCount: matchEvents.length,
@@ -85,8 +176,8 @@ Widget MatchEventPage(List<MatchEvent> matchEvents, FootballMatch matchData, int
 Widget MatchDetailPage(MatchDetailData matchDetailData, FootballMatch matchData) {
   return Column(
     children: [
-      SizedBox(height: 16.0),
-      MatchTile(matchData),
+      // SizedBox(height: 16.0),
+      // MatchTile(matchData),
       Expanded(
           child: ListView.builder(
               itemCount: matchDetailData.homeTeamData.statistics.length,
